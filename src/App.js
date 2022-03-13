@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch
+} from "react-router-dom";
+import Navigation from './Giaodienweb/Navigation';
+import Home from './Giaodienweb/Home'
+import Products from './Giaodienweb/Products'
+import About from './Giaodienweb/About'
+import Error from './Giaodienweb/Error'
+
 import './App.css';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Navigation/>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+
+          <Route path="/about">
+            <About />
+          </Route>
+
+          <Route path="/products">
+            <Products />
+          </Route>
+
+          <Route path="/:somestring">
+            <Error />
+          </Route>
+        </Switch>
+    </Router>
+  )
 }
 
 export default App;
