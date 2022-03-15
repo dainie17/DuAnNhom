@@ -28,6 +28,14 @@ app.get('/listdm', (req, res) => {
   
 })
 
+app.get('/listDM', (req, res) => {
+  con.query("SELECT * FROM danhmuc order by idDanhMuc desc", function (err, result, fields) {
+      if (err) throw err;
+      res.send(result)
+    });
+
+})
+
 app.post('/AddDanhMuc', (req, res) => {
      var sql = "insert into danhmuc (tenDanhMuc, idcha) values('"+ req.body.tenDanhMuc +"','"+ req.body.idcha +"');";
      console.log(sql)
@@ -38,6 +46,14 @@ app.post('/AddDanhMuc', (req, res) => {
         res.send("ok")
       }
     });
+})
+
+app.get('/listSP', (req, res) => {
+  con.query("SELECT * FROM sanpham order by idSanPham desc", function (err, result, fields) {
+      if (err) throw err;
+      res.send(result)
+    });
+
 })
 
 // hiển thị ds bảng sv theo khoảng id

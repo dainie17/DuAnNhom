@@ -1,6 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from "react-hook-form";
+import axios from 'axios'
 
 const Home = () => {
+
+    const [listSP, setListSP] = useState([]);
+
+    const getSanPham = async() => {
+        const baseurl = 'http://192.168.1.98:5000/listSP';
+        const response = await axios.get(baseurl);
+        setListSP(response.data);
+    }
+
+    useEffect(() => {
+        getSanPham();
+    })
+
      return (
             <div className="container">
 
@@ -24,24 +39,28 @@ const Home = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Cà phê</td>
-                                <td>10000 Đ</td>
-                                <td>Chất lượng cao</td>
-                                <td>17/07/2021</td>
-                                <td>Cà phê</td>
-                                <td>Còn hàng</td>
-                                <td>kg</td>
-                                <td>10 ngày</td>
-                                <td>Đăk Lăk</td>
-                                <td>10 tấn</td>
-                                <td>cà phê 1</td>
+
+                            {listSP.map((item) =>
+                                <tr>                                                  
+                                <td>{item.idSanPham}</td>
+                                <td>{item.tenSP}</td>
+                                <td>{item.giaSP}</td>
+                                <td>{item.chiTiet}</td>
+                                <td>{item.ngayTao}</td>
+                                <td>{item.maDanhMuc}</td>
+                                <td>{item.tinhTrang}</td>
+                                <td>{item.donVi}</td>
+                                <td>{item.hanSuDung}</td>
+                                <td>{item.noiSanXuat}</td>
+                                <td>{item.soLuong}, {item.donViSL}</td>
+                                <td>{item.maDanhMucNho}</td>
                                 <td>
                                     <button type="button" style={{ width: '40%', backgroundColor: 'blue', color: 'white', marginRight: '3%' }}>Edit</button>
                                     <button type="button" style={{ width: '55%', backgroundColor: 'red', color: 'white' }}>Delete</button>                                     
                                 </td>
-                            </tr>                                              
+                            </tr>      
+                            )}
+                                                                   
                         </tbody>
                     </table>
 

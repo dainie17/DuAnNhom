@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from "react-hook-form";
+import axios from 'axios'
 
 const Products = () => {
+
     return (
          <div className="container1">
             <div className="container-left">
