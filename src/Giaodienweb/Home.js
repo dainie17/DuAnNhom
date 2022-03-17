@@ -8,13 +8,13 @@ const Home = () => {
     const [listSP, setListSP] = useState([]);
 
     const getSanPham = async () => {
-        const baseurl = 'http://192.168.1.23:5000/listSP';
+        const baseurl = 'http://192.168.1.98:5000/listSP';
         const response = await axios.get(baseurl);
         setListSP(response.data);
     }
 
     const deleteSP = (idSanPham) => {
-        axios.post('http://192.168.1.23:5000/deleteSP/', { idXoaSP: idSanPham })
+        axios.post('http://192.168.1.98:5000/deleteSP/', { idXoaSP: idSanPham })
             .then(response => {
                 if (response.data === 'ok') {
                     alert('xóa thành công')

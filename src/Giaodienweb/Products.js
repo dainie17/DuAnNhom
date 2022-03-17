@@ -6,7 +6,7 @@ import axios from 'axios'
 const Products = () => {
     const { register, handleSubmit } = useForm();
     const onSubmit = data => {
-        axios.post('http://192.168.1.23:5000/AddSanPham', data)
+        axios.post('http://192.168.1.98:5000/AddSanPham', data)
             .then(response => {
                 if (response.data === 'ok') {
                     alert('thêm thành công');
