@@ -8,8 +8,7 @@ const About = () => {
     const [listCate, setLiCate] = useState([]);
     const onSubmit = data => {
         axios.post('http://192.168.1.98:5000/AddDanhMuc', data)
-        .then(response => {
-            
+        .then(response => {           
             if(response.data === 'ok'){
                 alert('thêm thành công');
             }
@@ -33,13 +32,25 @@ const About = () => {
         setLiCate(response.data);
     }
 
+    const deleteCate = (idDanhMuc) => {
+        axios.post('http://192.168.1.98:5000/deletePost/', { idXoa: idDanhMuc })
+          .then(response => {
+            if (response.data === 'ok') {
+              alert('xóa thành công')
+              getdanhmuc();
+              getDanhMuc();
+            }
+          });
+    
+      }
+
     return (
 
          <div className="container">
              
              <h3>Thêm danh mục :</h3>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} style={{marginBottom: '20px'}}>
             <input placeholder="Nhập tên danh mục" {...register("tenDanhMuc")} />
             <select {...register("idcha")}>
             <option value={0}>Danh mục mới</option>
@@ -68,7 +79,7 @@ const About = () => {
                                 <td>{item.idCha}</td>                              
                                 <td>
                                     <button type="button" style={{ width: '40%', backgroundColor: 'blue', color: 'white', marginRight: '3%' }}>Edit</button>
-                                    <button type="button" style={{ width: '55%', backgroundColor: 'red', color: 'white' }}>Delete</button>                                     
+                                    <button onClick={() => deleteCate(item.idDanhMuc)} type="button" style={{ width: '55%', backgroundColor: 'red', color: 'white' }}>Delete</button>                                     
                                 </td>
                             </tr>      
                             )}

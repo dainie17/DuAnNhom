@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 5000;
-var bodyParser = require('body-parser')
+// var bodyParser = require('body-parser')
 var cosr = require('cors');
 var mysql = require("mysql");
 app.use(cosr());
@@ -42,10 +42,21 @@ app.post('/AddDanhMuc', (req, res) => {
  
     con.query(sql, function (err, result, fields) {
       if (err) throw err;
-      if (result.affectedRows == 1) {
+      if (result.affectedRows === 1) {
         res.send("ok")
       }
     });
+})
+
+app.post('/deletePost/', (req, res) => {
+  var idDanhMuc = req.body.idXoa;
+  var sql = "DELETE FROM danhmuc WHERE idDanhMuc =" + idDanhMuc + "";
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    if (result === "ok" || result.affectedRows === 1) {
+      res.send("ok")
+    }
+  });
 })
 
 app.get('/listSP', (req, res) => {
@@ -75,7 +86,7 @@ app.post('/AddTrangPhuc', (req, res) => {
     con.query(sql, function (err, result, fields) {
   
       if (err) throw err;
-      if (result == "ok") {
+      if (result === "ok") {
         res.send("ok")
       }
     });
@@ -89,7 +100,7 @@ app.post('/AddTrangPhuc', (req, res) => {
     con.query(sql, function (err, result, fields) {
   
       if (err) throw err;
-      if (result == "ok") {
+      if (result === "ok") {
         res.send("ok")
       }
     });
@@ -102,7 +113,7 @@ app.post('/UpdateTrangPhuc', (req, res) => {
   var sql = "UPDATE trangphuc SET LinkAnh= '" + req.body.LinkAnh + "', TenTrangPhuc= '" + req.body.TenTrangPhuc + "', Gia= '" + req.body.Gia + "', MoTa= '" + req.body.MoTa + "' WHERE id= '" + req.body.id + "'";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    if (result == "ok") {
+    if (result === "ok") {
       res.send("ok")
     }
   });
