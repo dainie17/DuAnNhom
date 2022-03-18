@@ -8,13 +8,13 @@ const Home = () => {
     const [listSP, setListSP] = useState([]);
 
     const getSanPham = async () => {
-        const baseurl = 'http://192.168.1.98:5000/listSP';
+        const baseurl = 'http://10.22.214.218:5000/listSP';
         const response = await axios.get(baseurl);
         setListSP(response.data);
     }
 
     const deleteSP = (idSanPham) => {
-        axios.post('http://192.168.1.98:5000/deleteSP/', { idXoaSP: idSanPham })
+        axios.post('http://10.22.214.218:5000/deleteSP/', { idXoaSP: idSanPham })
             .then(response => {
                 if (response.data === 'ok') {
                     alert('xóa thành công')
@@ -32,8 +32,8 @@ const Home = () => {
         <div className="container">
 
             <div className="panel-heading">LIST ITEM :</div>
-            <div>
-                <Link to="/products">
+            <div style={{ marginBottom: 20, fontFamily: 'bold' }}>
+                <Link to="/products" style={{ fontSize: 25 }}>
                     Thêm sản phẩm
                 </Link>
 

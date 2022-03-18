@@ -34,6 +34,9 @@ nav{
 .table-hover{
   width: 100%;
 }
+table, th, td {
+  border: 1px solid black;
+}
 
 .table-heading{
   background-color:"black";

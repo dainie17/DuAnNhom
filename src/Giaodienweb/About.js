@@ -7,7 +7,7 @@ const About = () => {
     const [listcate, setLicate] = useState([]);
     const [listCate, setLiCate] = useState([]);
     const onSubmit = data => {
-        axios.post('http://192.168.1.98:5000/AddDanhMuc', data)
+        axios.post('http://10.22.214.218:5000/AddDanhMuc', data)
             .then(response => {
                 if (response.data === 'ok') {
                     alert('thêm thành công');
@@ -21,19 +21,19 @@ const About = () => {
     })
 
     const getdanhmuc = async () => {
-        const baseurl = 'http://192.168.1.98:5000/listdm';
+        const baseurl = 'http://10.22.214.218:5000/listdm';
         const response = await axios.get(baseurl);
         setLicate(response.data);
     }
 
     const getDanhMuc = async () => {
-        const baseurl = 'http://192.168.1.98:5000/listDM';
+        const baseurl = 'http://10.22.214.218:5000/listDM';
         const response = await axios.get(baseurl);
         setLiCate(response.data);
     }
 
     const deleteCate = (idDanhMuc) => {
-        axios.post('http://192.168.1.98:5000/deletePost/', { idXoa: idDanhMuc })
+        axios.post('http://10.22.214.218:5000/deletePost/', { idXoa: idDanhMuc })
             .then(response => {
                 if (response.data === 'ok') {
                     alert('xóa thành công')
