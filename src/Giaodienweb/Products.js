@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable jsx-a11y/alt-text */
+import React from 'react';
 import { useForm } from "react-hook-form";
 import axios from 'axios'
 

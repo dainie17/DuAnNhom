@@ -21,7 +21,7 @@ con.connect(function (err) {
 });
 
 app.get('/listdm', (req, res) => {
-  con.query("SELECT * FROM danhmuc where idcha = 0 order by idDanhMuc desc", function (err, result, fields) {
+  con.query("SELECT * FROM danhmuc where idCha = 0 order by idDanhMuc desc", function (err, result, fields) {
     if (err) throw err;
     res.send(result)
   });
@@ -37,8 +37,7 @@ app.get('/listDM', (req, res) => {
 })
 
 app.post('/AddDanhMuc', (req, res) => {
-  var sql = "insert into danhmuc (tenDanhMuc, idcha) values('" + req.body.tenDanhMuc + "','" + req.body.idcha + "');";
-  console.log(sql)
+  var sql = "insert into danhmuc (tenDanhMuc, idCha) values('" + req.body.tenDanhMuc + "','" + req.body.idcha + "');";
 
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
@@ -48,7 +47,7 @@ app.post('/AddDanhMuc', (req, res) => {
   });
 })
 
-app.post('/deletePost/', (req, res) => {
+app.post('/deleteDM/', (req, res) => {
   var idDanhMuc = req.body.idXoa;
   var sql = "DELETE FROM danhmuc WHERE idDanhMuc =" + idDanhMuc + "";
   con.query(sql, function (err, result, fields) {
@@ -58,6 +57,45 @@ app.post('/deletePost/', (req, res) => {
     }
   });
 })
+
+app.post('/updateDM', (req, res) => {
+  const idDanhMuc = req.body.idDanhMucSua;
+  const tenDanhMuc = req.body.dataUpdate.tenDanhMucSua;
+  const idCha = req.body.dataUpdate.idChaSua;
+
+  var sql = "UPDATE danhmuc SET tenDanhMuc='"+tenDanhMuc+"',idCha='"+idCha+"' WHERE idDanhMuc = "+idDanhMuc+"" ;
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    if (result === "ok" || result.affectedRows === 1) {
+      res.send("ok")
+    }
+  });
+})
+
+app.post('/updateSP', (req, res) => {
+  const idSanPham = req.body.idSanPhamSua;
+  const tenSP = req.body.dataUpdate.tenSPSua;
+  const giaSP = req.body.dataUpdate.giaSPSua;
+  const ngayTao = req.body.dataUpdate.ngayTaoSua;
+  const hanSuDung = req.body.dataUpdate.hanSuDungSua;
+  const maDanhMuc = req.body.dataUpdate.maDanhMucSua;
+  const maDanhMucNho = req.body.dataUpdate.maDanhMucNhoSua;
+  const donVi = req.body.dataUpdate.donViSua;
+  const noiSanXuat = req.body.dataUpdate.noiSanXuatSua;
+  const soLuong = req.body.dataUpdate.soLuongSua;
+  const tinhTrang = req.body.dataUpdate.tinhTrangSua;
+  const chiTiet = req.body.dataUpdate.chiTietSua;
+  const donViSL = req.body.dataUpdate.donViSLSua;
+
+  var sql = "UPDATE sanpham SET tenSP ='"+tenSP+"',giaSP ='"+giaSP+"',ngayTao ='"+ngayTao+"',hanSuDung ='"+hanSuDung+"',maDanhMuc ='"+maDanhMuc+"',maDanhMucNho ='"+maDanhMucNho+"',donVi ='"+donVi+"',noiSanXuat ='"+noiSanXuat+"',soLuong ='"+soLuong+"',tinhTrang ='"+tinhTrang+"',chiTiet ='"+chiTiet+"',donViSL ='"+donViSL+"' WHERE idSanPham = "+idSanPham+"" ;
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    if (result === "ok" || result.affectedRows === 1) {
+      res.send("ok")
+    }
+  });
+})
+
 app.post('/deleteSP/', (req, res) => {
   var idSanPham = req.body.idXoaSP;
   var sql = "DELETE FROM sanpham WHERE idSanPham =" + idSanPham + "";

@@ -1,9 +1,44 @@
 import React, { useEffect, useState } from 'react';
-// import { useForm } from "react-hook-form";
 import axios from 'axios'
 import { Link } from 'react-router-dom';
+import { Modal } from 'react-responsive-modal';
+import { useForm } from "react-hook-form";
 
 const Home = () => {
+
+    const { register, handleSubmit } = useForm();
+    const [idSanPhamSua, setidSanPhamSua] = useState();
+    const [tenSPSua, settenSPSua] = useState();
+    const [giaSPSua, setgiaSPSua] = useState();
+
+    const [open, setOpen] = useState(false);
+
+    function onOpenModal() {
+        setOpen(true);
+    };
+
+    const onCloseModal = () => {
+        setOpen(false)
+    };
+
+    const updatePost = (item) => {
+        setidSanPhamSua(item.idSanPham);
+        settenSPSua(item.tenSP);
+        setgiaSPSua(item.giaSP);
+    
+        onOpenModal()
+      }
+
+      function onUpdate(dataUpdate) {
+        axios.post('http://192.168.1.98:5000/updateSP/', {dataUpdate , idSanPhamSua: idSanPhamSua })
+        .then(response => {
+          if (response.data === 'ok') {
+            alert('SỬa thành công')       
+          }
+        });
+      }
+    
+
 
     const [listSP, setListSP] = useState([]);
 
@@ -17,8 +52,7 @@ const Home = () => {
         axios.post('http://192.168.1.98:5000/deleteSP/', { idXoaSP: idSanPham })
             .then(response => {
                 if (response.data === 'ok') {
-                    alert('xóa thành công')
-                    getSanPham();
+                    alert('xóa thành công')                  
                 }
             });
 
@@ -74,6 +108,7 @@ const Home = () => {
                             <td>{item.maDanhMucNho}</td>
                             <td>
                                 <button type="button" style={{ width: '40%', backgroundColor: 'blue', color: 'white', marginRight: '3%' }}>Edit</button>
+                                <button onClick={() => updatePost(item)}>Sửa</button>
                                 <button onClick={() => deleteSP(item.idSanPham)} type="button" style={{ width: '55%', backgroundColor: 'red', color: 'white' }}>Delete</button>
                             </td>
                         </tr>
@@ -81,6 +116,16 @@ const Home = () => {
 
                 </tbody>
             </table>
+
+            <Modal open={open} onClose={() => onCloseModal()}>
+            <form style={{width: '80%'}} onSubmit={handleSubmit(onUpdate)}>
+              <input defaultValue={tenSPSua} placeholder="tên sản phẩm" {...register("tenSPSua")} />
+              <input defaultValue={giaSPSua} placeholder="giá sản phẩm" {...register("giaSPSua")} />
+              <button type="submit">Sửa</button>
+            </form>
+            
+          </Modal>
+
 
         </div>
     )
