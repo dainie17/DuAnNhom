@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
 import { Link } from 'react-router-dom';
@@ -10,6 +11,16 @@ const Home = () => {
     const [idSanPhamSua, setidSanPhamSua] = useState();
     const [tenSPSua, settenSPSua] = useState();
     const [giaSPSua, setgiaSPSua] = useState();
+    const [chiTietSua, setChiTietSua] = useState();
+    const [ngayTaoSua, setngayTaoSua] = useState();
+    const [maDanhMucSua, setmaDanhMucSua] = useState();
+    const [tinhTrangSua, settinhTrangSua] = useState();
+    const [donViSua, setdonViSua] = useState();
+    const [hanSuDungSua, sethanSuDungSua] = useState();
+    const [noiSanXuatSua, setnoiSanXuatSua] = useState();
+    const [soLuongSua, setsoLuongSua] = useState();
+    const [maDanhMucNhoSua, setmaDanhMucNhoSua] = useState();
+    const [donViSLSua, setdonViSLSua] = useState();
 
     const [open, setOpen] = useState(false);
 
@@ -25,12 +36,22 @@ const Home = () => {
         setidSanPhamSua(item.idSanPham);
         settenSPSua(item.tenSP);
         setgiaSPSua(item.giaSP);
-    
+        setChiTietSua(item.chiTiet);
+        setngayTaoSua(item.ngayTao);
+        setmaDanhMucSua(item.maDanhMuc);
+        settinhTrangSua(item.tinhTrang);
+        setdonViSua(item.donVi);
+        sethanSuDungSua(item.hanSuDung);
+        setnoiSanXuatSua(item.noiSanXuat);
+        setsoLuongSua(item.soLuong);
+        setmaDanhMucNhoSua(item.maDanhMucNho);
+        setdonViSLSua(item.donViSL);
+
         onOpenModal()
       }
 
       function onUpdate(dataUpdate) {
-        axios.post('http://192.168.1.98:5000/updateSP/', {dataUpdate , idSanPhamSua: idSanPhamSua })
+        axios.post('http://10.22.196.253:5000/updateSP/', {dataUpdate , idSanPhamSua: idSanPhamSua })
         .then(response => {
           if (response.data === 'ok') {
             alert('SỬa thành công')       
@@ -43,13 +64,13 @@ const Home = () => {
     const [listSP, setListSP] = useState([]);
 
     const getSanPham = async () => {
-        const baseurl = 'http://192.168.1.98:5000/listSP';
+        const baseurl = 'http://10.22.196.253:5000/listSP';
         const response = await axios.get(baseurl);
         setListSP(response.data);
     }
 
     const deleteSP = (idSanPham) => {
-        axios.post('http://192.168.1.98:5000/deleteSP/', { idXoaSP: idSanPham })
+        axios.post('http://10.22.196.253:5000/deleteSP/', { idXoaSP: idSanPham })
             .then(response => {
                 if (response.data === 'ok') {
                     alert('xóa thành công')                  
@@ -66,8 +87,8 @@ const Home = () => {
         <div className="container">
 
             <div className="panel-heading">LIST ITEM :</div>
-            <div>
-                <Link to="/products">
+            <div style={{ marginBottom: 20, fontFamily: 'bold' }}>
+                <Link to="/products" style={{ fontSize: 25 }}>
                     Thêm sản phẩm
                 </Link>
 
@@ -107,8 +128,8 @@ const Home = () => {
                             <td>{item.soLuong}, {item.donViSL}</td>
                             <td>{item.maDanhMucNho}</td>
                             <td>
-                                <button type="button" style={{ width: '40%', backgroundColor: 'blue', color: 'white', marginRight: '3%' }}>Edit</button>
-                                <button onClick={() => updatePost(item)}>Sửa</button>
+                                {/* <button type="button" style={{ width: '40%', backgroundColor: 'blue', color: 'white', marginRight: '3%' }}>Edit</button> */}
+                                <button style={{ width: '40%', backgroundColor: 'blue', color: 'white', marginRight: '3%' }} onClick={() => updatePost(item)}>Sửa</button>
                                 <button onClick={() => deleteSP(item.idSanPham)} type="button" style={{ width: '55%', backgroundColor: 'red', color: 'white' }}>Delete</button>
                             </td>
                         </tr>
@@ -118,10 +139,32 @@ const Home = () => {
             </table>
 
             <Modal open={open} onClose={() => onCloseModal()}>
-            <form style={{width: '80%'}} onSubmit={handleSubmit(onUpdate)}>
-              <input defaultValue={tenSPSua} placeholder="tên sản phẩm" {...register("tenSPSua")} />
-              <input defaultValue={giaSPSua} placeholder="giá sản phẩm" {...register("giaSPSua")} />
-              <button type="submit">Sửa</button>
+            <form style={{width: '100%'}} onSubmit={handleSubmit(onUpdate)}>
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={tenSPSua} placeholder="tên sản phẩm" {...register("tenSPSua")} />
+                <p>Giá sản phẩm :</p>
+                <input defaultValue={giaSPSua} placeholder="giá sản phẩm" {...register("giaSPSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={chiTietSua} placeholder="Chi tiết" {...register("chiTietSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={ngayTaoSua} placeholder="ngày tạo" {...register("ngayTaoSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={maDanhMucSua} placeholder="danh mục" {...register("maDanhMucSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={tinhTrangSua} placeholder="tình trạng" {...register("tinhTrangSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={donViSua} placeholder="Đơn vị" {...register("donViSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={hanSuDungSua} placeholder="Hạn sử dụng" {...register("hanSuDungSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={noiSanXuatSua} placeholder="Nơi sản xuất" {...register("noiSanXuatSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={soLuongSua} placeholder="số lượng" {...register("soLuongSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={donViSLSua} placeholder="Đơn vị số lượng" {...register("donViSLSua")} />
+                <p>Tên sản phẩm :</p>
+                <input defaultValue={maDanhMucNhoSua} placeholder="danh mục nhỏ" {...register("maDanhMucNhoSua")} />
+                <button type="submit">Sửa</button>
             </form>
             
           </Modal>

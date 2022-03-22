@@ -155,10 +155,10 @@ app.post('/Remove', (req, res) => {
 })
 
 // post sua san pham
-app.post('/UpdateTrangPhuc', (req, res) => {
+app.post('/UpdateSanPham', (req, res) => {
 
   // //update sql
-  var sql = "UPDATE trangphuc SET LinkAnh= '" + req.body.LinkAnh + "', TenTrangPhuc= '" + req.body.TenTrangPhuc + "', Gia= '" + req.body.Gia + "', MoTa= '" + req.body.MoTa + "' WHERE id= '" + req.body.id + "'";
+  var sql = "UPDATE sanpham SET tenSP= '" + req.body.suatenSP + "', giaSP= '" + req.body.giaSP + "', ngayTao= '" + req.body.ngayTao + "', hanSuDung= '" + req.body.hanSuDung + "' maDanhMuc= '" + req.body.maDanhMuc + "', donVi= '" + req.body.donVi + "', noiSanXuat= '" + req.body.noiSanXuat + "', soLuong= '" + req.body.soLuong + "', tinhTrang= '" + req.body.tinhTrang + "', chiTiet= '" + req.body.chiTiet + "', donViSL= '" + req.body.donViSL + "', Where idSanPham = '" + req.body.idSanPham + "'";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     if (result === "ok") {

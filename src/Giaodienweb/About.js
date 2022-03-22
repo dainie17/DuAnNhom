@@ -29,7 +29,7 @@ const About = () => {
     const [listCate, setLiCate] = useState([]);
 
     const onSubmit = data => {
-        axios.post('http://192.168.1.98:5000/AddDanhMuc', data)
+        axios.post('http://10.22.196.253:5000/AddDanhMuc', data)
             .then(response => {
                 if (response.data === 'ok') {
                     alert('thêm thành công');
@@ -43,19 +43,19 @@ const About = () => {
     })
 
     const getdanhmuc = async () => {
-        const baseurl = 'http://192.168.1.98:5000/listdm';
+        const baseurl = 'http://10.22.196.253:5000/listdm';
         const response = await axios.get(baseurl);
         setLicate(response.data);
     }
 
     const getDanhMuc = async () => {
-        const baseurl = 'http://192.168.1.98:5000/listDM';
+        const baseurl = 'http://10.22.196.253:5000/listDM';
         const response = await axios.get(baseurl);
         setLiCate(response.data);
     }
 
     const deleteCate = (idDanhMuc) => {
-        axios.post('http://192.168.1.98:5000/deleteDM/', { idXoa: idDanhMuc })
+        axios.post('http://10.22.196.253:5000/deleteDM/', { idXoa: idDanhMuc })
             .then(response => {
                 if (response.data === 'ok') {
                     alert('xóa thành công')             
@@ -68,7 +68,7 @@ const About = () => {
     const [idChaSua, setidChaSua] = useState();
 
     function onUpdate(dataUpdate) {
-        axios.post('http://192.168.1.98:5000/updateDM/', {dataUpdate , idDanhMucSua: idDanhMucSua })
+        axios.post('http://10.22.196.253:5000/updateDM/', {dataUpdate , idDanhMucSua: idDanhMucSua })
         .then(response => {
           if (response.data === 'ok') {
             alert('SỬa thành công')       
@@ -110,7 +110,7 @@ const About = () => {
                             <td>{item.tenDanhMuc}</td>
                             <td>{item.idCha}</td>
                             <td>                               
-                                <button onClick={() => updatePost(item)}>Sửa</button>
+                                <button style={{ width: '40%', backgroundColor: 'blue', color: 'white', marginRight: '3%' }} onClick={() => updatePost(item)}>Sửa</button>
                                 <button onClick={() => deleteCate(item.idDanhMuc)} type="button" style={{ width: '55%', backgroundColor: 'red', color: 'white' }}>Delete</button>
                             </td>
                         </tr>
