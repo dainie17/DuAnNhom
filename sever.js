@@ -1,13 +1,15 @@
 const express = require("express");
 const app = express();
 const port = 5000;
-// var bodyParser = require('body-parser')
+const bodyParser= require('body-parser')
+const multer = require('multer');
 var cosr = require('cors');
 var mysql = require("mysql");
 app.use(cosr());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/uploads', express.static('./uploads'))
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -20,6 +22,34 @@ con.connect(function (err) {
   console.log("Connected!");
 });
 
+//up load hình ảnh
+var linkimg;
+
+const storage = multer.diskStorage({
+    destination: (req, file, callBack) => {
+        callBack(null, 'uploads')
+    },
+    filename: (req, file, callBack) => {
+      linkimg = Date.now() + '.jpg';
+      console.log(linkimg);
+		callBack(null, linkimg)      
+    }
+  })
+let upload = multer({ storage: storage})
+
+//end upload 
+app.post('/uploadFileAPI', upload.single('file'), (req, res, next) => {
+   const file = req.file;
+   console.log(file);
+    if (!file) {
+      const error = new Error('No File')
+      error.httpStatusCode = 400
+      return next(error)
+    }
+  })
+//kết thúc up load hình ảnh
+
+//lấy danh mục có id cha = 0
 app.get('/listdm', (req, res) => {
   con.query("SELECT * FROM danhmuc where idCha = 0 order by idDanhMuc desc", function (err, result, fields) {
     if (err) throw err;
@@ -28,7 +58,8 @@ app.get('/listdm', (req, res) => {
 
 })
 
-app.get('/listDM', (req, res) => {
+//lấy tất cả danh mục
+app.get('/listALLDM', (req, res) => {
   con.query("SELECT * FROM danhmuc order by idDanhMuc desc", function (err, result, fields) {
     if (err) throw err;
     res.send(result)
@@ -36,6 +67,7 @@ app.get('/listDM', (req, res) => {
 
 })
 
+//thêm danh mục
 app.post('/AddDanhMuc', (req, res) => {
   var sql = "insert into danhmuc (tenDanhMuc, idCha) values('" + req.body.tenDanhMuc + "','" + req.body.idcha + "');";
 
@@ -47,6 +79,7 @@ app.post('/AddDanhMuc', (req, res) => {
   });
 })
 
+//xóa danh mục
 app.post('/deleteDM/', (req, res) => {
   var idDanhMuc = req.body.idXoa;
   var sql = "DELETE FROM danhmuc WHERE idDanhMuc =" + idDanhMuc + "";
@@ -58,6 +91,7 @@ app.post('/deleteDM/', (req, res) => {
   });
 })
 
+//sửa danh mục
 app.post('/updateDM', (req, res) => {
   const idDanhMuc = req.body.idDanhMucSua;
   const tenDanhMuc = req.body.dataUpdate.tenDanhMucSua;
@@ -66,12 +100,13 @@ app.post('/updateDM', (req, res) => {
   var sql = "UPDATE danhmuc SET tenDanhMuc='"+tenDanhMuc+"',idCha='"+idCha+"' WHERE idDanhMuc = "+idDanhMuc+"" ;
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    if (result === "ok" || result.affectedRows === 1) {
+    if (result === "ok") {
       res.send("ok")
     }
   });
 })
 
+//sửa sản phẩm
 app.post('/updateSP', (req, res) => {
   const idSanPham = req.body.idSanPhamSua;
   const tenSP = req.body.dataUpdate.tenSPSua;
@@ -96,17 +131,33 @@ app.post('/updateSP', (req, res) => {
   });
 })
 
-app.post('/deleteSP/', (req, res) => {
-  var idSanPham = req.body.idXoaSP;
-  var sql = "DELETE FROM sanpham WHERE idSanPham =" + idSanPham + "";
+//xóa sản phẩm
+
+app.post("/deleteSP/", (req, res) => {
+  var idXoaa = req.body.idXoa;
+  var urixoaa = req.body.urixoa;
+  console.log(urixoaa);
+  var sql = "DELETE FROM sanpham WHERE idSanPham =" + idXoaa + "";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     if (result === "ok" || result.affectedRows === 1) {
-      res.send("ok")
+      var fs = require("fs");
+      var filePath = "./uploads/"+urixoaa+"";
+      fs.unlink(filePath, deleteFileCallback);
+      function deleteFileCallback(error) {
+        if (error) {
+          console.log("Error in dleting file");
+          console.log(error.message);
+        } else {
+          console.log("Deleted Successfully...");
+        }
+      }
+      res.send("ok");
     }
   });
-})
+});
 
+//lấy danh sách sản phẩm
 app.get('/listSP', (req, res) => {
   con.query("SELECT * FROM sanpham order by idSanPham asc", function (err, result, fields) {
     if (err) throw err;
@@ -115,21 +166,9 @@ app.get('/listSP', (req, res) => {
 
 })
 
-// hiển thị ds bảng sv theo khoảng id
-app.get("/ds6tp/:id", (req, res) => {
-  var limit = 6;
-  var ofsset = (req.params.id - 1) * limit;
-  var sql = "SELECT * FROM trangphuc ORDER BY id desc LIMIT " + ofsset + " , " + limit;
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    res.send(result);
-  });
-});
-
-// post
+// thêm sản phẩm
 app.post('/AddSanPham', (req, res) => {
-  var sql = "insert into sanpham (  tenSP, giaSP, ngayTao, hanSuDung, maDanhMuc ,donVi, 	noiSanXuat,soLuong,tinhTrang,chiTiet,donViSL) values('" + req.body.tenSP + "','" + req.body.giaSP + "','" + req.body.ngayTao + "','" + req.body.hanSuDung + "','" + req.body.maDanhMuc + "','" + req.body.donVi + "','" + req.body.noiSanXuat + "','" + req.body.soLuong + "','" + req.body.tinhTrang + "','" + req.body.chiTiet + "','" + req.body.donViSL + "');";
-  console.log(sql)
+  var sql = "insert into sanpham (  tenSP, hinh, giaSP, ngayTao, hanSuDung, maDanhMuc ,donVi,	noiSanXuat,soLuong,tinhTrang,chiTiet,donViSL) values('" + req.body.tenSP + "','" + linkimg + "','" + req.body.giaSP + "','" + req.body.ngayTao + "','" + req.body.hanSuDung + "','" + req.body.maDanhMuc + "','" + req.body.donVi + "','" + req.body.noiSanXuat + "','" + req.body.soLuong + "','" + req.body.tinhTrang + "','" + req.body.chiTiet + "','" + req.body.donViSL + "');";
 
   con.query(sql, function (err, result, fields) {
 
@@ -139,81 +178,6 @@ app.post('/AddSanPham', (req, res) => {
     }
   });
 })
-
-app.post('/Remove', (req, res) => {
-  console.log(req.body.id)
-  var sql = "DELETE FROM trangphuc WHERE id = " + req.body.id;
-  console.log(sql)
-
-  con.query(sql, function (err, result, fields) {
-
-    if (err) throw err;
-    if (result === "ok") {
-      res.send("ok")
-    }
-  });
-})
-
-// post sua san pham
-app.post('/UpdateSanPham', (req, res) => {
-
-  // //update sql
-  var sql = "UPDATE sanpham SET tenSP= '" + req.body.suatenSP + "', giaSP= '" + req.body.giaSP + "', ngayTao= '" + req.body.ngayTao + "', hanSuDung= '" + req.body.hanSuDung + "' maDanhMuc= '" + req.body.maDanhMuc + "', donVi= '" + req.body.donVi + "', noiSanXuat= '" + req.body.noiSanXuat + "', soLuong= '" + req.body.soLuong + "', tinhTrang= '" + req.body.tinhTrang + "', chiTiet= '" + req.body.chiTiet + "', donViSL= '" + req.body.donViSL + "', Where idSanPham = '" + req.body.idSanPham + "'";
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    if (result === "ok") {
-      res.send("ok")
-    }
-  });
-})
-
-// singup
-app.post("/singup", (req, res) => {
-  var sql = "SELECT * FROM taikhoan WHERE tentaikhoan= '" + req.body.tentaikhoans + "'";
-
-
-  con.query(sql, function (err, result, fields) {
-    if (err) {
-      console.log(err);
-      res.send({ 'success': false, 'message': "Database không có kết nối!" });
-    }
-
-    if (result.length > 0) {
-      res.send({ 'success': false });
-    } else {
-      res.send({ 'success': true });
-      var sql = "INSERT INTO taikhoan ( tentaikhoan, matkhau) values('" + req.body.tentaikhoans + "','" + req.body.matkhaus + "');";
-      con.query(sql, function (err, result, fields) {
-        if (err) throw err;
-      });
-    }
-  });
-});
-
-
-
-// check user
-app.post("/login", (req, res) => {
-  console.log("dang nhap")
-  var sql = "SELECT * FROM taikhoan WHERE tentaikhoan= '" + req.body.username + "' AND matkhau= '" + req.body.password + "'";
-
-
-  con.query(sql, function (err, result, fields) {
-    if (err) {
-      console.log(err);
-      res.send({ 'success': false, 'message': "Database không có kết nối!" });
-    }
-
-    if (result.length > 0) {
-      res.send({ 'success': true });
-      console.log(res);
-    } else {
-      res.send({ 'success': false, 'message': "Sai tài khoản!" });
-      console.log(res);
-    }
-  });
-});
-
 
 app.use(function (req, res, next) {
   res.status(404).send("404 Not Found!");

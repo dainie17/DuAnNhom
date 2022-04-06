@@ -9,6 +9,7 @@ import Home from './Giaodienweb/Home'
 import Products from './Giaodienweb/Products'
 import About from './Giaodienweb/About'
 import Error from './Giaodienweb/Error'
+import Editsanpham from './ChucNang/editproduct'
 
 import './App.css';
 
@@ -29,9 +30,13 @@ const App = () => {
             <Products />
           </Route>
 
+          <Route path={"/editsanpham/:id"} children={<Editsanpham/>}>
+          </Route>
+
           <Route path="/:somestring">
             <Error />
           </Route>
+         
         </Switch>
     </Router>
   )

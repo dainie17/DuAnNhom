@@ -26,10 +26,10 @@ const About = () => {
 
     const { register, handleSubmit } = useForm();
     const [listcate, setLicate] = useState([]);
-    const [listAllCate, setAllLiCate] = useState([]);
+    const [listCate, setLiCate] = useState([]);
 
     const onSubmit = data => {
-        axios.post('http://10.22.194.204:5000/AddDanhMuc', data)
+        axios.post('http://192.168.1.98:5000/AddDanhMuc', data)
             .then(response => {
                 if (response.data === 'ok') {
                     alert('thêm thành công');
@@ -43,19 +43,19 @@ const About = () => {
     })
 
     const getdanhmuc = async () => {
-        const baseurl = 'http://10.22.194.204:5000/listdm';
+        const baseurl = 'http://192.168.1.98:5000/listdm';
         const response = await axios.get(baseurl);
         setLicate(response.data);
     }
 
     const getDanhMuc = async () => {
-        const baseurl = 'http://10.22.194.204:5000/listALLDM';
+        const baseurl = 'http://192.168.1.98:5000/listDM';
         const response = await axios.get(baseurl);
-        setAllLiCate(response.data);
+        setLiCate(response.data);
     }
 
     const deleteCate = (idDanhMuc) => {
-        axios.post('http://10.22.194.204:5000/deleteDM/', { idXoa: idDanhMuc })
+        axios.post('http://192.168.1.98:5000/deleteDM/', { idXoa: idDanhMuc })
             .then(response => {
                 if (response.data === 'ok') {
                     alert('xóa thành công')             
@@ -68,14 +68,12 @@ const About = () => {
     const [idChaSua, setidChaSua] = useState();
 
     function onUpdate(dataUpdate) {
-        axios.post('http://10.22.194.204:5000/updateDM/', {dataUpdate , idDanhMucSua: idDanhMucSua })
+        axios.post('http://192.168.1.98:5000/updateDM/', {dataUpdate , idDanhMucSua: idDanhMucSua })
         .then(response => {
           if (response.data === 'ok') {
-            alert('Sửa thành công')       
+            alert('SỬa thành công')       
           }
         });
-
-        getDanhMuc();
       }
 
     return (
@@ -106,7 +104,7 @@ const About = () => {
                 </thead>
                 <tbody>
 
-                    {listAllCate.map((item) =>
+                    {listCate.map((item) =>
                         <tr>
                             <td>{item.idDanhMuc}</td>
                             <td>{item.tenDanhMuc}</td>
