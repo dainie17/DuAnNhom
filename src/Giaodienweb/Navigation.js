@@ -8,7 +8,7 @@ const Navigation = () => {
             <h3>logo</h3>
             <ul className="nav-ul"> 
                 <li>
-                <a href="/" style={linkStyle}>Home</a>
+                <a href="/" style={linkStyle}></a>
                 </li>
                 <li>
                     <a href="/products" style={linkStyle}>Products</a>

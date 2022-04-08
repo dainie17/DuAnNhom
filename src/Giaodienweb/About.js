@@ -1,35 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import axios from 'axios'
-import { Modal } from 'react-responsive-modal';
+import { Link } from 'react-router-dom';
 
 const About = () => {
-
-    const [open, setOpen] = useState(false);
-
-    function onOpenModal() {
-        setOpen(true);
-    };
-
-    const onCloseModal = () => {
-        setOpen(false)
-    };
-
-    const updatePost = (item) => {
-        setidDanhMucSua(item.idDanhMuc);
-        setTenDanhMucSua(item.tenDanhMuc);
-        setidChaSua(item.idCha);
-    
-        onOpenModal()
-      }
     
 
     const { register, handleSubmit } = useForm();
     const [listcate, setLicate] = useState([]);
-    const [listAllCate, setAllLiCate] = useState([]);
+    const [listAllCate, setAllliCate] = useState([]);
 
     const onSubmit = data => {
-        axios.post('http://10.22.194.204:5000/AddDanhMuc', data)
+        axios.post('http://localhost:5000/AddDanhMuc', data)
             .then(response => {
                 if (response.data === 'ok') {
                     alert('thêm thành công');
@@ -43,19 +25,19 @@ const About = () => {
     })
 
     const getdanhmuc = async () => {
-        const baseurl = 'http://10.22.194.204:5000/listdm';
+        const baseurl = 'http://localhost:5000/listdm';
         const response = await axios.get(baseurl);
         setLicate(response.data);
     }
 
     const getDanhMuc = async () => {
-        const baseurl = 'http://10.22.194.204:5000/listALLDM';
+        const baseurl = 'http://localhost:5000/listALLDM';
         const response = await axios.get(baseurl);
-        setAllLiCate(response.data);
+        setAllliCate(response.data);
     }
 
     const deleteCate = (idDanhMuc) => {
-        axios.post('http://10.22.194.204:5000/deleteDM/', { idXoa: idDanhMuc })
+        axios.post('http://localhost:5000/deleteDM/', { idXoa: idDanhMuc })
             .then(response => {
                 if (response.data === 'ok') {
                     alert('xóa thành công')             
@@ -63,24 +45,25 @@ const About = () => {
             });          
     }
 
-    const [idDanhMucSua, setidDanhMucSua] = useState();
-    const [tenDanhMucSua, setTenDanhMucSua] = useState();
-    const [idChaSua, setidChaSua] = useState();
-
-    function onUpdate(dataUpdate) {
-        axios.post('http://10.22.194.204:5000/updateDM/', {dataUpdate , idDanhMucSua: idDanhMucSua })
-        .then(response => {
-          if (response.data === 'ok') {
-            alert('Sửa thành công')       
-          }
-        });
-
-        getDanhMuc();
-      }
-
+      const linkStyle = {color: 'white'}
     return (
 
         <div className="container">
+
+        <nav>
+                    <h3>logo</h3>
+                    <ul className="nav-ul"> 
+                        <li>
+                        <a href="/" style={linkStyle}>Trang Chủ</a>
+                        </li>
+                        <li>
+                            <a href="/products" style={linkStyle}>Thêm Sản Phẩm</a>
+                        </li>
+                        <li>
+                            <a href="/about" style={linkStyle}>Quản Lý Danh Mục</a>
+                        </li>
+                    </ul>
+        </nav>
 
             <h3>Thêm danh mục :</h3>
 
@@ -112,7 +95,9 @@ const About = () => {
                             <td>{item.tenDanhMuc}</td>
                             <td>{item.idCha}</td>
                             <td>                               
-                                <button style={{ width: '40%', backgroundColor: 'blue', color: 'white', marginRight: '3%' }} onClick={() => updatePost(item)}>Sửa</button>
+                            <Link to={`/editdanhmuc/${item.idDanhMuc}`} style={{ fontSize: '15px', backgroundColor: 'blue', color: 'white', textDecoration: 'none', paddingLeft: '12px', paddingRight: '12px', boxShadow: '2px 2px black' }}>
+                                Sửa
+                            </Link>
                                 <button onClick={() => deleteCate(item.idDanhMuc)} type="button" style={{ width: '55%', backgroundColor: 'red', color: 'white' }}>Delete</button>
                             </td>
                         </tr>
@@ -120,21 +105,6 @@ const About = () => {
 
                 </tbody>
             </table>                      
-             
-            <Modal open={open} onClose={() => onCloseModal()}>
-            <form style={{width: '80%'}} onSubmit={handleSubmit(onUpdate)}>
-              <input defaultValue={tenDanhMucSua} placeholder="tên danh mục" {...register("tenDanhMucSua")} />
-              <select {...register("idChaSua")}>
-                    <option value={idChaSua}>Danh mục cha hiện tại</option>
-                    <option value={0}>Danh mục mới</option>
-                    {listcate.map((item) =>
-                        <option key={item.idDanhMuc} value={item.idDanhMuc}>{item.tenDanhMuc}</option>
-                    )}
-                </select>  
-              <button type="submit">Sửa</button>
-            </form>
-            
-          </Modal>
 
         </div>
 

@@ -10,13 +10,13 @@ import Products from './Giaodienweb/Products'
 import About from './Giaodienweb/About'
 import Error from './Giaodienweb/Error'
 import Editsanpham from './ChucNang/editproduct'
+import Editdanhmuc from './ChucNang/editdanhmuc'
 
 import './App.css';
 
 const App = () => {
   return (
     <Router>
-      <Navigation/>
         <Switch>
           <Route exact path="/">
             <Home />
@@ -32,11 +32,13 @@ const App = () => {
 
           <Route path={"/editsanpham/:id"} children={<Editsanpham/>}>
           </Route>
+         
+         <Route path={"/editdanhmuc/:id"} children={<Editdanhmuc/>}>
+           </Route> 
 
-          <Route path="/:somestring">
+           <Route path="/:somestring">
             <Error />
           </Route>
-         
         </Switch>
     </Router>
   )

@@ -22,8 +22,35 @@ con.connect(function (err) {
   console.log("Connected!");
 });
 
+//lấy dữ liệu sản phẩm cần sửa
+app.get("/layeditsanpham/:idsp", function (req, res) {
+  var page = req.params.idsp;
+
+  var sql = "SELECT * FROM sanpham WHERE idSanPham = " + page;
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    // console.log(result);
+
+    res.send(result);
+  });
+});
+
+//lấy dữ liệu danh mục cần sửa
+app.get("/layeditdanhmuc/:id", function (req, res) {
+  var id = req.params.id;
+
+  var sql = "SELECT * FROM danhmuc WHERE idDanhMuc = " + id;
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    // console.log(result);
+
+    res.send(result);
+  });
+});
+
 //up load hình ảnh
 var linkimg;
+var trong = 0;
 
 const storage = multer.diskStorage({
     destination: (req, file, callBack) => {
@@ -40,6 +67,7 @@ let upload = multer({ storage: storage})
 //end upload 
 app.post('/uploadFileAPI', upload.single('file'), (req, res, next) => {
    const file = req.file;
+   trong = 1;
    console.log(file);
     if (!file) {
       const error = new Error('No File')
@@ -92,43 +120,74 @@ app.post('/deleteDM/', (req, res) => {
 })
 
 //sửa danh mục
-app.post('/updateDM', (req, res) => {
-  const idDanhMuc = req.body.idDanhMucSua;
-  const tenDanhMuc = req.body.dataUpdate.tenDanhMucSua;
-  const idCha = req.body.dataUpdate.idChaSua;
+var img;
+app.post('/editdanhmuc', (req, res) => {
+  const idDanhMuc = req.body.idDanhMuc;
+  const tenDanhMuc = req.body.tenDanhMuc;
+  const idCha = req.body.idCha;
+    
+    var sql = "UPDATE danhmuc SET tenDanhMuc ='"+tenDanhMuc+"',idCha ='"+idCha+"' WHERE idDanhMuc = "+idDanhMuc+"" ;
+    con.query(sql, function (err, result, fields) {
+      if (err) throw err;
+      if (result === "ok") {
+        res.send("ok");
+      }
+      res.send("ok");
+    });
 
-  var sql = "UPDATE danhmuc SET tenDanhMuc='"+tenDanhMuc+"',idCha='"+idCha+"' WHERE idDanhMuc = "+idDanhMuc+"" ;
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    if (result === "ok") {
-      res.send("ok")
-    }
-  });
 })
 
 //sửa sản phẩm
-app.post('/updateSP', (req, res) => {
-  const idSanPham = req.body.idSanPhamSua;
-  const tenSP = req.body.dataUpdate.tenSPSua;
-  const giaSP = req.body.dataUpdate.giaSPSua;
-  const ngayTao = req.body.dataUpdate.ngayTaoSua;
-  const hanSuDung = req.body.dataUpdate.hanSuDungSua;
-  const maDanhMuc = req.body.dataUpdate.maDanhMucSua;
-  const maDanhMucNho = req.body.dataUpdate.maDanhMucNhoSua;
-  const donVi = req.body.dataUpdate.donViSua;
-  const noiSanXuat = req.body.dataUpdate.noiSanXuatSua;
-  const soLuong = req.body.dataUpdate.soLuongSua;
-  const tinhTrang = req.body.dataUpdate.tinhTrangSua;
-  const chiTiet = req.body.dataUpdate.chiTietSua;
-  const donViSL = req.body.dataUpdate.donViSLSua;
+var img;
+app.post('/editsanpham', (req, res) => {
+  const idSanPham = req.body.idSanPham;
+  const tenSP = req.body.tenSP;
+  const giaSP = req.body.giaSP;
+  const ngayTao = req.body.ngayTao;
+  const hanSuDung = req.body.hanSuDung;
+  const maDanhMuc = req.body.maDanhMuc;
+  const donVi = req.body.donVi;
+  const noiSanXuat = req.body.noiSanXuat;
+  const soLuong = req.body.soLuong;
+  const tinhTrang = req.body.tinhTrang;
+  const chiTiet = req.body.chiTiet;
+  const donViSL = req.body.donViSL;
+  const hinhxoa = req.body.hinh;
 
-  var sql = "UPDATE sanpham SET tenSP ='"+tenSP+"',giaSP ='"+giaSP+"',ngayTao ='"+ngayTao+"',hanSuDung ='"+hanSuDung+"',maDanhMuc ='"+maDanhMuc+"',maDanhMucNho ='"+maDanhMucNho+"',donVi ='"+donVi+"',noiSanXuat ='"+noiSanXuat+"',soLuong ='"+soLuong+"',tinhTrang ='"+tinhTrang+"',chiTiet ='"+chiTiet+"',donViSL ='"+donViSL+"' WHERE idSanPham = "+idSanPham+"" ;
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    if (result === "ok" || result.affectedRows === 1) {
-      res.send("ok")
-    }
-  });
+  if (trong === 1 ) {
+    img = linkimg;
+
+    var sql = "UPDATE sanpham SET tenSP ='"+tenSP+"',hinh ='"+img+"',giaSP ='"+giaSP+"',ngayTao ='"+ngayTao+"',hanSuDung ='"+hanSuDung+"',maDanhMuc ='"+maDanhMuc+"',donVi ='"+donVi+"',noiSanXuat ='"+noiSanXuat+"',soLuong ='"+soLuong+"',tinhTrang ='"+tinhTrang+"',chiTiet ='"+chiTiet+"',donViSL ='"+donViSL+"' WHERE idSanPham = "+idSanPham+"" ;
+    con.query(sql, function (err, result, fields) {
+      if (err) throw err;
+      console.log(idSanPham);
+        console.log(hinhxoa);
+        var fs = require("fs");
+        var filePath = "./uploads/"+hinhxoa+"";
+        fs.unlink(filePath, deleteFileCallback);
+        function deleteFileCallback(error) {
+          if (error) {
+            console.log("Error in dleting file");
+            console.log(error.message);
+          } else {
+            console.log("Deleted Successfully...");
+            res.send("ok");
+          }
+        }       
+    });
+  } else if (trong === 0) {
+    img =  req.body.hinh;
+    
+    var sql = "UPDATE sanpham SET tenSP ='"+tenSP+"',hinh ='"+img+"',giaSP ='"+giaSP+"',ngayTao ='"+ngayTao+"',hanSuDung ='"+hanSuDung+"',maDanhMuc ='"+maDanhMuc+"',donVi ='"+donVi+"',noiSanXuat ='"+noiSanXuat+"',soLuong ='"+soLuong+"',tinhTrang ='"+tinhTrang+"',chiTiet ='"+chiTiet+"',donViSL ='"+donViSL+"' WHERE idSanPham = "+idSanPham+"" ;
+    con.query(sql, function (err, result, fields) {
+      if (err) throw err;
+      if (result === "ok") {
+        res.send("ok");
+      }
+      res.send("ok");
+    });
+  }
+
 })
 
 //xóa sản phẩm
@@ -169,9 +228,8 @@ app.get('/listSP', (req, res) => {
 // thêm sản phẩm
 app.post('/AddSanPham', (req, res) => {
   var sql = "insert into sanpham (  tenSP, hinh, giaSP, ngayTao, hanSuDung, maDanhMuc ,donVi,	noiSanXuat,soLuong,tinhTrang,chiTiet,donViSL) values('" + req.body.tenSP + "','" + linkimg + "','" + req.body.giaSP + "','" + req.body.ngayTao + "','" + req.body.hanSuDung + "','" + req.body.maDanhMuc + "','" + req.body.donVi + "','" + req.body.noiSanXuat + "','" + req.body.soLuong + "','" + req.body.tinhTrang + "','" + req.body.chiTiet + "','" + req.body.donViSL + "');";
-
+  console.log("thêm sp");
   con.query(sql, function (err, result, fields) {
-
     if (err) throw err;
     if (result === "ok") {
       res.send("ok")
