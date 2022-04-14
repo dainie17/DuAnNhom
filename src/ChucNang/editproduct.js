@@ -132,7 +132,7 @@ const Editproduct = () => {
   };
 
   return (
-    <div style={{ width: '100%', alignItems: 'center', textAlign: 'center' }}>
+    <div style={{ width: '100%', alignItems: 'center', textAlign: 'center', background: '#F5F5F5' }}>
       <h2>Cập Nhật Sản Phẩm</h2>
 
       <h4>ID Sản phẩm: {id} </h4>

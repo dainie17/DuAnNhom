@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
 
+    const [query, setQuery] = useState("")
+
     const [listSP, setListSP] = useState([]);
 
     const getSanPham = async () => {
@@ -57,9 +59,11 @@ const Home = () => {
 
             <div className="panel-heading">LIST ITEM :</div>
             <div style={{ marginBottom: 20, fontFamily: 'bold' }}>
-                <Link to="/products" style={{ fontSize: '25', textDecoration: 'none', backgroundColor: 'green', color: 'white', padding: '10px', boxShadow: '2px 2px black' }}>
-                    Thêm sản phẩm
-                </Link>
+               
+            <div className='tkR'>
+            <input style={{boxShadow: "1px 1px black", width: '30%', height: '30px'}} type="text" placeholder='Tìm kiếm ...' className='seach'
+              onChange={(e) => setQuery(e.target.value)} />
+          </div>
 
             </div>
             <table className="table-hover">
@@ -81,7 +85,9 @@ const Home = () => {
                 </thead>
                 <tbody>
 
-                    {listSP.map((item) =>
+                    {listSP.filter((listSP) =>
+                    listSP.tenSP.toLowerCase().includes(query)
+                    ).map((item) =>
                         <tr>
                             <td>{item.idSanPham}</td>
                             <td><img style={{width: '100%'}} src={"http://localhost:5000/uploads/"+item.hinh} /></td>
