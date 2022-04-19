@@ -22,6 +22,31 @@ con.connect(function (err) {
   console.log("Connected!");
 });
 
+//lấy dữ liệu 5 sản phẩm
+app.get("/laydulieu5sp/:idss", (req, res) => {
+  var limit = 5;
+  var ofsset = (req.params.idss - 1) * limit;
+  var sql =
+    "SELECT * FROM sanpham ORDER BY idSanPham DESC LIMIT " + ofsset + " , " + limit;
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+//lấy tất cả danh mục
+app.get('/listALLDM/:idss', (req, res) => {
+  var limit = 15;
+  var ofsset = (req.params.idss - 1) * limit;
+  var sql =
+    "SELECT * FROM danhmuc ORDER BY idDanhMuc DESC LIMIT " + ofsset + " , " + limit;
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.send(result);
+  });
+
+})
+
 //lấy dữ liệu sản phẩm cần sửa
 app.get("/layeditsanpham/:idsp", function (req, res) {
   var page = req.params.idsp;
@@ -65,6 +90,8 @@ const storage = multer.diskStorage({
 let upload = multer({ storage: storage})
 
 //end upload 
+
+
 app.post('/uploadFileAPI', upload.single('file'), (req, res, next) => {
    const file = req.file;
    trong = 1;
@@ -80,15 +107,6 @@ app.post('/uploadFileAPI', upload.single('file'), (req, res, next) => {
 //lấy danh mục có id cha = 0
 app.get('/listdm', (req, res) => {
   con.query("SELECT * FROM danhmuc where idCha = 0 order by idDanhMuc desc", function (err, result, fields) {
-    if (err) throw err;
-    res.send(result)
-  });
-
-})
-
-//lấy tất cả danh mục
-app.get('/listALLDM', (req, res) => {
-  con.query("SELECT * FROM danhmuc order by idDanhMuc desc", function (err, result, fields) {
     if (err) throw err;
     res.send(result)
   });
@@ -236,10 +254,6 @@ app.post('/AddSanPham', (req, res) => {
     }
   });
 })
-
-app.use(function (req, res, next) {
-  res.status(404).send("404 Not Found!");
-});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

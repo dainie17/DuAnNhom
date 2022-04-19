@@ -4,13 +4,14 @@ import {
   Route,
   Switch
 } from "react-router-dom";
-import Navigation from './Giaodienweb/Navigation';
+
 import Home from './Giaodienweb/Home'
 import Products from './Giaodienweb/Products'
 import About from './Giaodienweb/About'
 import Error from './Giaodienweb/Error'
 import Editsanpham from './ChucNang/editproduct'
 import Editdanhmuc from './ChucNang/editdanhmuc'
+import Adddanhmuc from './ChucNang/addDanhMuc';
 
 import './App.css';
 
@@ -35,6 +36,10 @@ const App = () => {
          
          <Route path={"/editdanhmuc/:id"} children={<Editdanhmuc/>}>
            </Route> 
+
+           <Route path="/addDM">
+            <Adddanhmuc />
+          </Route>
 
            <Route path="/:somestring">
             <Error />

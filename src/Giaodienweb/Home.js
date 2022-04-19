@@ -6,16 +6,35 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
 
-    const [query, setQuery] = useState("")
+    const [query, setQuery] = useState("");
+
+    const getData = async () => {
+        const baseUrl = "http://localhost:5000/laydulieu5sp/"+counter;
+        const response = await axios.get(baseUrl);
+        setListSP(response.data);
+      };
 
     const [listSP, setListSP] = useState([]);
+    const [counter, setCounter] = useState(1);
+    let incrementCounter = () =>{
+        setCounter(counter + 1);
+        console.log(counter);
+      }
+    let decrementCounter = () =>{
+        setCounter(counter - 1);
+      } 
+      if (counter <= 1) {
+        decrementCounter = () => setCounter(1);
+      }
 
-    const getSanPham = async () => {
-        const baseurl = 'http://localhost:5000/listSP';
-        const response = await axios.get(baseurl);
-        setListSP(response.data);
-    }
-
+      function Display(props) {
+        return <label style={{ marginLeft: ".5rem" }}>{props.message}</label>;
+      }    
+    // const getSanPham = async () => {
+    //     const baseurl = 'http://localhost:5000/listSP';
+    //     const response = await axios.get(baseurl);
+    //     setListSP(response.data);
+    // }
     
     const deleteSP = (idSP, uri) => {
         axios
@@ -27,14 +46,16 @@ const Home = () => {
             if (response.data === "ok") {
             alert("Xóa thành công");
             console.log(response.data);
-            getSanPham();
+            // getSanPham();
+            getData();
             }
         });
         console.log(uri);
     };
 
     useEffect(() => {
-        getSanPham();
+        // getSanPham();
+        getData();
     })
 
     const linkStyle = {color: 'white'}
@@ -118,6 +139,13 @@ const Home = () => {
 
                 </tbody>
             </table>
+        <button style={{ marginLeft: ".5rem" }} onClick={decrementCounter}>
+            Trang trước
+          </button>
+        <Display  message={counter} />
+        <button style={{ marginLeft: ".5rem" }} onClick={incrementCounter}>
+            Trang tiếp
+        </button>
         </div>
     )
 }

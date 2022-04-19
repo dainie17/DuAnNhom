@@ -15,7 +15,7 @@ const Editproduct = () => {
     const baseurl = 'http://localhost:5000/listALLDM';
     const response = await axios.get(baseurl);
     setLicate(response.data);
-}
+  }
 
   const [userInfo, setuserInfo] = useState({
     file: [],
@@ -103,7 +103,7 @@ const Editproduct = () => {
     history.push("/");
   };
 
-  const huySua = () =>{
+  const huySua = () => {
     history.push("/");
   }
 
@@ -137,27 +137,8 @@ const Editproduct = () => {
 
       <h4>ID Sản phẩm: {id} </h4>
 
-      {/* Container left */}
-      <div style={{ width: '40%', float: 'left', alignItems: 'center', textAlign: 'center', marginLeft: '5%', marginBottom: '2%' }}>
-
-        {/* hình ảnh */}
-        <div>
-          <input onChange={uploadFile} type="file" style={{ marginBottom: '1%' }} />
-          <div>
-            {userInfo.filepreview !== null ?
-              <img style={{ width: '100%', height: '430px' }} src={userInfo.filepreview} alt="UploadImage" />
-              : null}
-
-            {userInfo.filepreview === null ?
-              <img style={{ width: '100%', height: '430px' }} src={"http://localhost:5000/uploads/" + hinh} />
-              : null}
-          </div>
-        </div>
-
-      </div>
-
       {/* Container right                      */}
-      <div style={{ width: '40%', float: 'left', marginLeft: '10%', border: '1px solid black' }}>
+      <div style={{ width: '40%', float: 'left', marginLeft: '5%', marginTop: '2%', border: '1px solid black' }}>
 
         {/* tên sản phẩm */}
         <div style={{ marginTop: '2%' }}>
@@ -172,7 +153,7 @@ const Editproduct = () => {
           </input>
         </div>
 
-        <div style={{ width: '80%', marginLeft: '11%', marginTop: '2%', marginBottom: '10%' }}>
+        <div style={{ width: '80%', marginLeft: '11%', marginTop: '2%', marginTop: '10%' }}>
 
           {/* giá sản phẩm*/}
           <div style={{ float: 'left', width: '50%' }}>
@@ -231,7 +212,7 @@ const Editproduct = () => {
             <text>Số lượng : </text>
             <input
               style={{ width: '40%', height: '30px', fontSize: '19px' }}
-              type="text"
+              type="number"
               placeholder="Số lượng"
               name="soLuong"
               value={soLuong}
@@ -252,7 +233,7 @@ const Editproduct = () => {
         <div style={{ width: '100%' }}>
 
           {/* Danh mục */}
-          <div style={{ width:'50%', marginTop: '2%', float: 'left', marginLeft: '2%' }}>
+          <div style={{ width: '50%', marginTop: '2%', float: 'left', marginLeft: '2%' }}>
             <text>Danh mục : </text>
             <select style={{ height: '30px', fontSize: '19px' }} name='maDanhMuc' onChange={e => onInputChange(e)}>
               <option value={maDanhMuc}>Danh mục hiện tại</option>
@@ -284,7 +265,7 @@ const Editproduct = () => {
           <div style={{ width: '100%' }}>
             <text>Nơi sản xuất : </text>
             <input
-              style={{width: '72%', height: '30px', fontSize: '19px' }}
+              style={{ width: '72%', height: '30px', fontSize: '19px' }}
               type="text"
               placeholder="Nơi sản xuất"
               name="noiSanXuat"
@@ -299,7 +280,7 @@ const Editproduct = () => {
         <div style={{ marginTop: '2%', marginBottom: '2%' }}>
           <text>Chi tiết : </text>
           <input
-            style={{ width: '80%', height: '200px', fontSize: '19px' }}
+            style={{ width: '80%', height: '255px', fontSize: '19px' }}
             type="text"
             placeholder="Chi tiết"
             name="chiTiet"
@@ -309,10 +290,28 @@ const Editproduct = () => {
         </div>
       </div>
 
-      <button onClick={updateEmployee} style={{ width: '70%', height: '50px', marginBottom: '1%' }}>Cật Nhật</button>
-      <button onClick={huySua} style={{ width: '70%', height: '50px', marginBottom: '5%' }}>Hủy</button>
 
+           {/* Container left */}
+      <div style={{ width: '40%', float: 'left', alignItems: 'center', textAlign: 'center', marginLeft: '10%', marginTop: '2%' }}>
 
+        {/* hình ảnh */}
+        <div>
+          <input onChange={uploadFile} type="file" style={{ marginBottom: '1%' }} />
+          <div>
+            {userInfo.filepreview !== null ?
+              <img style={{ width: '100%', height: '430px' }} src={userInfo.filepreview} alt="UploadImage" />
+              : null}
+
+            {userInfo.filepreview === null ?
+              <img style={{ width: '100%', height: '430px' }} src={"http://localhost:5000/uploads/" + hinh} />
+              : null}
+          </div>
+        </div>
+
+        <button onClick={updateEmployee} style={{ width: '100%', height: '50px', marginBottom: '1%' }}>Cật Nhật</button>
+        <button onClick={huySua} style={{ width: '100%', height: '50px', marginBottom: '5%' }}>Hủy</button>
+
+      </div>         
     </div>
   );
 };

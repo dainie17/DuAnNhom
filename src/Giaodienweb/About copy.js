@@ -1,30 +1,37 @@
 import React, { useEffect, useState } from 'react';
+import { useForm } from "react-hook-form";
 import axios from 'axios'
 import { Link } from 'react-router-dom';
 
 const About = () => {
     
 
-    
+    const { register, handleSubmit } = useForm();
+    const [listcate, setLicate] = useState([]);
     const [listAllCate, setAllliCate] = useState([]);
-    const [counter, setCounter] = useState(1);
-    let incrementCounter = () =>{
-        setCounter(counter + 1);
-        console.log(counter);
-      }
-    let decrementCounter = () =>{
-        setCounter(counter - 1);
-      } 
-      if (counter <= 1) {
-        decrementCounter = () => setCounter(1);
-      }
 
-      function Display(props) {
-        return <label style={{ marginLeft: ".5rem" }}>{props.message}</label>;
-      }   
-    
+    const onSubmit = data => {
+        axios.post('http://localhost:5000/AddDanhMuc', data)
+            .then(response => {
+                if (response.data === 'ok') {
+                    alert('thêm thành công');
+                }
+            });
+    }
+
+    useEffect(() => {
+        getdanhmuc();
+        getDanhMuc();
+    })
+
+    const getdanhmuc = async () => {
+        const baseurl = 'http://localhost:5000/listdm';
+        const response = await axios.get(baseurl);
+        setLicate(response.data);
+    }
+
     const getDanhMuc = async () => {
-        const baseurl = 'http://localhost:5000/listALLDM/'+counter;
+        const baseurl = 'http://localhost:5000/listALLDM';
         const response = await axios.get(baseurl);
         setAllliCate(response.data);
     }
@@ -37,10 +44,6 @@ const About = () => {
                 }
             });          
     }
-
-    useEffect(() => {
-        getDanhMuc();
-    })
 
       const linkStyle = {color: 'white'}
     return (
@@ -62,12 +65,19 @@ const About = () => {
                     </ul>
         </nav>
 
-        <h3>Quản lý danh mục</h3>
-        <Link to={`/addDM`} 
-        style={{ fontSize: '15px', backgroundColor: 'blue', color: 'white', 
-        textDecoration: 'none', paddingLeft: '12px', paddingRight: '12px', boxShadow: '2px 2px black' }}>
-            Thêm
-        </Link>
+            <h3>Thêm danh mục :</h3>
+
+            <form onSubmit={handleSubmit(onSubmit)} style={{ marginBottom: '20px' }}>
+                <input placeholder="Nhập tên danh mục" {...register("tenDanhMuc")} />
+                <select {...register("idcha")}>
+                    <option value={0}>Danh mục mới</option>
+                    {listcate.map((item) =>
+                        <option key={item.idDanhMuc} value={item.idDanhMuc}>{item.tenDanhMuc}</option>
+                    )}
+                </select>
+                <input type="submit" />
+            </form>
+
             <table className="table-hover">
                 <thead>
                     <tr>
@@ -95,13 +105,7 @@ const About = () => {
 
                 </tbody>
             </table>                      
-            <button style={{ marginLeft: ".5rem" }} onClick={decrementCounter}>
-            Trang trước
-          </button>
-        <Display  message={counter} />
-        <button style={{ marginLeft: ".5rem" }} onClick={incrementCounter}>
-            Trang tiếp
-        </button>            
+
         </div>
 
     )
