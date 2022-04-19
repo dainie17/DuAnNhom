@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
@@ -11,7 +11,7 @@ const Adddanhmuc = () => {
   const [listcate, setLicate] = useState([]);
 
   const getdanhmuc = async () => {
-    const baseurl = 'http://localhost:5000/listdm';
+    const baseurl = 'http://localhost:5000/listdm0';
     const response = await axios.get(baseurl);
     setLicate(response.data);
   }

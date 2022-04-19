@@ -10,7 +10,7 @@ const Products = () => {
     const [listcate, setLicate] = useState([]);
 
     const getdanhmuc = async () => {
-        const baseurl = 'http://localhost:5000/listALLDM';
+        const baseurl = 'http://localhost:5000/listDM';
         const response = await axios.get(baseurl);
         setLicate(response.data);
     }
@@ -149,7 +149,7 @@ const Products = () => {
                 </select>
                 <select style={{ width: '25%', height: '37px', marginRight: '4%' }} name='maDanhMuc' {...register("maDanhMuc")}>
                     {listcate.map((item) =>
-                        <option key={item.idDanhMuc} value={item.idDanhMuc}>{item.tenDanhMuc}</option>
+                        <option key={item.tenDanhMuc} value={item.tenDanhMuc}>{item.tenDanhMuc}</option>
                     )}
                 </select>
                 <input type="text" style={{ width: '85%', height: '30px', marginBottom: '4%' }} placeholder="Ngày Tạo" {...register("ngayTao")} />

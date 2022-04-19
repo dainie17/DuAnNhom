@@ -22,6 +22,51 @@ con.connect(function (err) {
   console.log("Connected!");
 });
 
+ // singup
+ app.post("/singup", (req, res) => {
+  var sql = "SELECT * FROM taikhoan WHERE taiKhoan= '"+ req.body.tentaikhoans +"' AND matKhau= '"+ req.body.matkhaus + "'";
+
+ 
+  con.query(sql, function (err, result, fields) {
+    if (err) {
+      console.log(err);
+      res.send({'success': false ,'message': "Database không có kết nối!"});
+    }
+
+    if (result.length > 0) {
+      res.send({'success': false});
+    } else {
+      res.send({'success': true});
+      var sql = "INSERT INTO taikhoan ( taiKhoan, matKhau) values('"+ req.body.tentaikhoans +"','"+ req.body.matkhaus +"');";
+      con.query(sql, function (err, result, fields) {
+        if (err) throw err; 
+      });
+    }
+  });
+});
+
+ // check user
+ app.post("/login", (req, res) => {
+  console.log("dawng nhap")
+  var sql = "SELECT * FROM taikhoan WHERE taiKhoan= '"+ req.body.username +"' AND matKhau= '"+ req.body.password + "'";
+
+ 
+  con.query(sql, function (err, result, fields) {
+    if (err) {
+      console.log(err);
+      res.send({'success': false ,'message': "Database không có kết nối!"});
+    }
+
+    if (result.length > 0) {
+      res.send({'success': true});
+      console.log(res);
+    } else {
+      res.send({'success': false ,'message': "Sai tài khoản!"});
+      console.log(res);
+    }
+  });
+});
+
 //lấy dữ liệu 5 sản phẩm
 app.get("/laydulieu5sp/:idss", (req, res) => {
   var limit = 5;
@@ -104,8 +149,17 @@ app.post('/uploadFileAPI', upload.single('file'), (req, res, next) => {
   })
 //kết thúc up load hình ảnh
 
+//lấy danh mục
+app.get('/listDM', (req, res) => {
+  con.query("SELECT * FROM danhmuc order by idDanhMuc desc", function (err, result, fields) {
+    if (err) throw err;
+    res.send(result)
+  });
+
+})
+
 //lấy danh mục có id cha = 0
-app.get('/listdm', (req, res) => {
+app.get('/listdm0', (req, res) => {
   con.query("SELECT * FROM danhmuc where idCha = 0 order by idDanhMuc desc", function (err, result, fields) {
     if (err) throw err;
     res.send(result)

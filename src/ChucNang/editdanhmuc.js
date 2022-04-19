@@ -12,7 +12,7 @@ const Editdanhmuc = () => {
   const [listcate, setLicate] = useState([]);
 
   const getdanhmuc = async () => {
-    const baseurl = 'http://localhost:5000/listdm';
+    const baseurl = 'http://localhost:5000/listdm0';
     const response = await axios.get(baseurl);
     setLicate(response.data);
   }

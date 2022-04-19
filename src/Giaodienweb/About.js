@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 
 const About = () => {
     
-
-    
     const [listAllCate, setAllliCate] = useState([]);
     const [counter, setCounter] = useState(1);
     let incrementCounter = () =>{
